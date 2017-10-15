@@ -5,11 +5,12 @@ package alipay
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"github.com/astaxie/beego"
 	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/astaxie/beego"
 )
 
 type Client struct {
@@ -53,6 +54,7 @@ func (this *Client) Form(opts Options) string {
 	param.PaymentType = 1
 	param.ReturnUrl = this.ReturnUrl
 	param.SellerEmail = this.Email
+	param.SellerId = this.Partner
 	param.Service = "create_direct_pay_by_user"
 	param.Subject = opts.Subject
 	param.TotalFee = opts.Fee
@@ -74,6 +76,7 @@ func (this *Client) Form(opts Options) string {
 			<input type="hidden" name="partner" value="` + param.Partner + `">
 			<input type="hidden" name="payment_type" value="` + strconv.Itoa(int(param.PaymentType)) + `">
 			<input type="hidden" name="return_url" value="` + param.ReturnUrl + `">
+			<input type="hidden" name="seller_id" value="` + param.SellerId + `">
 			<input type="hidden" name="seller_email" value="` + param.SellerEmail + `">
 			<input type="hidden" name="service" value="` + param.Service + `">
 			<input type="hidden" name="subject" value="` + param.Subject + `">
@@ -246,7 +249,7 @@ func (this *Client) Notify(contro *beego.Controller) *Result {
 
 	// 返回参数
 	result := &Result{}
-	
+
 	// md5加密
 	m := md5.New()
 	m.Write([]byte(sign))

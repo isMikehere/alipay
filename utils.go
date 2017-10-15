@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -17,6 +18,7 @@ type AlipayParameters struct {
 	PaymentType  uint8   `json:"payment_type"`   //支付类型 1：商品购买
 	ReturnUrl    string  `json:"return_url"`     //回调url
 	SellerEmail  string  `json:"seller_email"`   //卖家支付宝邮箱
+	SellerId     string  `json:"seller_id"`      //卖家id
 	Service      string  `json:"service"`        //接口名称
 	Subject      string  `json:"subject"`        //商品名称
 	TotalFee     float32 `json:"total_fee"`      //总价
@@ -68,7 +70,9 @@ func sign(param interface{}) string {
 
 	//md5加密
 	m := md5.New()
+	fmt.Printf("%s", sign)
 	m.Write([]byte(sign))
 	sign = hex.EncodeToString(m.Sum(nil))
+	fmt.Printf("%s", sign)
 	return sign
 }
